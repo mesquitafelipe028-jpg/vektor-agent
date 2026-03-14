@@ -26,6 +26,51 @@ interface Message {
   intent?: string;
 }
 
+const termMap: Record<string, string> = {
+  pessoal: "Pessoal",
+  mei: "MEI",
+  income: "Receita",
+  expense: "Despesa"
+};
+
+const MarkdownText = ({ content }: { content: string }) => {
+  // Simple markdown to TSX parser for bold, headers and lists
+  const lines = content.split('\n');
+  
+  return (
+    <div className="prose prose-invert prose-xs max-w-none space-y-1">
+      {lines.map((line, i) => {
+        // Headers (###)
+        if (line.startsWith('### ')) {
+          return <h3 key={i} className="text-sm font-bold text-blue-400 mt-4 mb-2 uppercase tracking-tight">{line.replace('### ', '')}</h3>;
+        }
+        
+        // Lists (* or -)
+        if (line.trim().startsWith('* ') || line.trim().startsWith('- ')) {
+          const text = line.trim().replace(/^[\*\-]\s/, '');
+          return (
+            <div key={i} className="flex gap-2 items-start ml-2 text-slate-300">
+              <span className="text-blue-500 mt-1">•</span>
+              <span dangerouslySetInnerHTML={{ 
+                __html: text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>') 
+              }} />
+            </div>
+          );
+        }
+        
+        // Paragraphs with bold support
+        if (line.trim() === '') return <div key={i} className="h-1" />;
+        
+        return (
+          <p key={i} className="text-slate-200" dangerouslySetInnerHTML={{ 
+            __html: line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>') 
+          }} />
+        );
+      })}
+    </div>
+  );
+};
+
 const COLORS = ['#3B82F6', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B', '#6366F1'];
 
 const MessageChart = ({ data, type, title }: { data: any[], type: string, title?: string }) => {
@@ -246,7 +291,7 @@ export default function ChatPage() {
                     {msg.image_url && (
                       <img src={msg.image_url} alt="Uploaded" className="max-w-full rounded-lg mb-2" />
                     )}
-                    {msg.content}
+                    <MarkdownText content={msg.content} />
                   </div>
 
                   {msg.metadata?.visual_data && (
