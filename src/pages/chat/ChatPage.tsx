@@ -192,11 +192,11 @@ export default function ChatPage() {
                          <div className="flex items-center justify-between">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Preview do Registro</span>
                             <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                              msg.metadata?.api_params?.type === 'income' 
+                              (msg.metadata?.api_params?.type === 'income' || msg.metadata?.type === 'income')
                                 ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
                                 : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                             }`}>
-                              {msg.metadata?.api_params?.type === 'income' ? 'Receita' : 'Despesa'}
+                              {(msg.metadata?.api_params?.type === 'income' || msg.metadata?.type === 'income') ? 'Receita' : 'Despesa'}
                             </div>
                          </div>
                          
