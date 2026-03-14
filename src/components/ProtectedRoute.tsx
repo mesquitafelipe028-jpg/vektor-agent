@@ -40,11 +40,6 @@ export default function ProtectedRoute() {
   if (loading) return <LayoutSkeleton />;
   if (!user) return <Navigate to="/login" replace state={{ from: location }} />;
 
-  // Redirect to onboarding if not completed (skip if already on /onboarding)
-  const onboardingDone = localStorage.getItem(`vektor_onboarding_done_${user.id}`);
-  if (!onboardingDone && location.pathname !== "/onboarding") {
-    return <Navigate to="/onboarding" replace state={{ from: location }} />;
-  }
 
   return <Outlet />;
 }
