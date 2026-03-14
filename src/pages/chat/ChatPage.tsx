@@ -186,14 +186,56 @@ export default function ChatPage() {
                   </div>
                   
                   {msg.intent === "add_transaction" && !msg.metadata?.confirmed && (
-                    <Card className="p-4 bg-slate-900/50 border-slate-700 border-dashed backdrop-blur-lg mt-2">
-                       <Button 
-                          onClick={() => handleConfirmAction(msg.id)}
-                          size="sm" 
-                          className="w-full bg-emerald-600 hover:bg-emerald-500 text-white gap-2"
-                        >
-                          <Check size={16} /> Confirmar Registro
-                        </Button>
+                    <Card className="p-4 bg-slate-800/60 border-slate-700/50 backdrop-blur-xl mt-2 overflow-hidden relative group">
+                       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 pointer-events-none" />
+                       <div className="relative space-y-4">
+                         <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Preview do Registro</span>
+                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                              msg.metadata?.api_params?.type === 'income' 
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                                : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                            }`}>
+                              {msg.metadata?.api_params?.type === 'income' ? 'Receita' : 'Despesa'}
+                            </div>
+                         </div>
+                         
+                         <div className="space-y-1">
+                           <div className="text-2xl font-bold text-slate-100">
+                             R$ {msg.metadata?.api_params?.valor?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                           </div>
+                           <div className="text-sm text-slate-400 font-medium">
+                             {msg.metadata?.api_params?.descricao || "Sem descrição"}
+                           </div>
+                         </div>
+
+                         <div className="flex items-center gap-4 text-[11px] text-slate-500 border-t border-slate-700/50 pt-3">
+                           <div className="flex flex-col">
+                             <span className="text-[9px] uppercase font-bold text-slate-600">Categoria</span>
+                             <span className="text-slate-300">{msg.metadata?.api_params?.categoria || "Geral"}</span>
+                           </div>
+                           <div className="flex flex-col">
+                             <span className="text-[9px] uppercase font-bold text-slate-600">Perfil</span>
+                             <span className="text-slate-300 uppercase">{msg.metadata?.api_params?.tipo_conta || "Pessoal"}</span>
+                           </div>
+                           <div className="flex flex-col">
+                             <span className="text-[9px] uppercase font-bold text-slate-600">Data</span>
+                             <span className="text-slate-300">{msg.metadata?.api_params?.data}</span>
+                           </div>
+                         </div>
+
+                         <Button 
+                            onClick={() => handleConfirmAction(msg.id)}
+                            size="sm" 
+                            className={`w-full gap-2 font-bold shadow-lg transition-all active:scale-95 ${
+                              msg.metadata?.api_params?.type === 'income'
+                                ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20"
+                                : "bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/20"
+                            }`}
+                          >
+                            <Check size={16} /> Confirmar Registro
+                          </Button>
+                       </div>
                     </Card>
                   )}
 
