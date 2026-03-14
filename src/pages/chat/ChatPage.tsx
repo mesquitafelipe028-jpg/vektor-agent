@@ -139,8 +139,11 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     loadHistory();
@@ -188,17 +191,53 @@ export default function ChatPage() {
     }
   };
 
-  const handleSend = async () => {
-    if ((!input.trim() && !selectedImage) || isTyping) return;
+  const handleVoiceRecord = async () => {
+    if (isRecording) {
+      mediaRecorderRef.current?.stop();
+      setIsRecording(false);
+      return;
+    }
 
-    const currentInput = input;
-    const currentImage = selectedImage;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+      audioChunksRef.current = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = (reader.result as string).split(',')[1];
+          handleSend(undefined, undefined, base64);
+        };
+        reader.readAsDataURL(audioBlob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      recorder.start();
+      setIsRecording(true);
+    } catch (err) {
+      console.error("Erro ao acessar microfone:", err);
+      toast.error("Não foi possível acessar o microfone");
+    }
+  };
+
+  const handleSend = async (customInput?: string, customImage?: string, audio?: string) => {
+    const textToSend = customInput ?? input;
+    const imageToSend = customImage ?? selectedImage;
+    
+    if ((!textToSend.trim() && !imageToSend && !audio) || isTyping) return;
 
     const userMsgLocal: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: currentInput || "Enviou uma imagem",
-      image_url: currentImage || undefined,
+      content: audio ? "🎙️ Mensagem de voz" : (textToSend || "📸 Imagem enviada"),
+      image_url: imageToSend || undefined,
       created_at: new Date().toISOString()
     };
 
@@ -208,7 +247,7 @@ export default function ChatPage() {
     setIsTyping(true);
 
     try {
-      const response = await agentService.sendMessage(currentInput, currentImage?.split(',')[1]);
+      const response = await agentService.sendMessage(textToSend, imageToSend?.split(',')[1], audio);
       
       const assistantMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -384,15 +423,40 @@ export default function ChatPage() {
           )}
           <div className="flex items-center gap-2 bg-slate-800/40 backdrop-blur-2xl border border-slate-700/50 p-2 rounded-2xl">
             <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageSelect} />
-            <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} className="text-slate-400"><ImageIcon size={20} /></Button>
+            <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => fileInputRef.current?.click()} 
+                className="text-slate-400 hover:text-blue-400 hover:bg-blue-400/10"
+              >
+                <ImageIcon size={20} />
+              </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleVoiceRecord}
+              className={`transition-all ${isRecording ? "text-red-500 bg-red-500/10 animate-pulse" : "text-slate-400 hover:text-purple-400 hover:bg-purple-400/10"}`}
+            >
+              <Mic size={20} />
+            </Button>
+
             <Input
-              placeholder="Pergunte ou registre algo..."
+              placeholder={isRecording ? "Gravando áudio..." : "Pergunte ou registre algo..."}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              disabled={isRecording}
               className="border-none bg-transparent focus-visible:ring-0 text-slate-100"
             />
-            <Button onClick={handleSend} disabled={!input.trim() && !selectedImage} size="icon" className="bg-blue-600 rounded-xl"><Send size={18} /></Button>
+            <Button 
+              onClick={() => handleSend()} 
+              disabled={(!input.trim() && !selectedImage) || isTyping || isRecording} 
+              size="icon" 
+              className="bg-blue-600 hover:bg-blue-500 rounded-xl shadow-lg shadow-blue-900/20"
+            >
+              <Send size={18} />
+            </Button>
           </div>
         </div>
       </div>

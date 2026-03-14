@@ -8,9 +8,9 @@ export interface AgentResponse {
 }
 
 export const agentService = {
-  async sendMessage(message: string, image?: string): Promise<AgentResponse> {
+  async sendMessage(message: string, image?: string, audio?: string): Promise<AgentResponse> {
     const { data, error } = await supabase.functions.invoke('agent-message', {
-      body: { message, image }
+      body: { message, image, audio }
     });
 
     if (error) throw error;
