@@ -16,7 +16,7 @@ export default function Login() {
   const location = useLocation();
   const { signIn, user } = useAuth();
 
-  const from = location.state?.from?.pathname || "/dashboard";
+  const from = location.state?.from?.pathname || "/chat";
 
   // Redirect already-logged-in users via effect
   useEffect(() => {
