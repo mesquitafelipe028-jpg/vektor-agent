@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User as UserIcon, X, Sparkles, ChevronLeft, ImageIcon, Mic, Check } from "lucide-react";
+import { Send, Bot, User as UserIcon, X, Sparkles, ChevronLeft, ImageIcon, Mic, Check, LogOut } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -141,8 +141,19 @@ export default function ChatPage() {
             Vektor Agent
           </h1>
         </div>
-        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-          <Sparkles className="h-5 w-5 text-white" />
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={signOut} 
+            title="Sair"
+            className="text-slate-400 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+          >
+            <LogOut size={20} />
+          </Button>
+          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+            <Sparkles className="h-5 w-5 text-white" />
+          </div>
         </div>
       </header>
 
