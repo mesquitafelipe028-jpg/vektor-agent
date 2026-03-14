@@ -5,7 +5,7 @@ export const actionRouter = {
   async handleAction(intent: string, data: any, userId: string): Promise<boolean> {
     if (intent === 'add_transaction' || intent === 'add_expense' || intent === 'add_income') {
       try {
-        const type = intent === 'add_income' ? 'income' : 'expense';
+        const type = data.type || (intent === 'add_income' ? 'income' : 'expense');
         
         // Chamada via vektor-api para consistência
         const { data: result, error } = await supabase.functions.invoke('vektor-api', {
