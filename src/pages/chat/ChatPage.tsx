@@ -427,7 +427,7 @@ export default function ChatPage() {
                 variant="ghost" 
                 size="icon" 
                 onClick={() => fileInputRef.current?.click()} 
-                className="text-slate-400 hover:text-blue-400 hover:bg-blue-400/10"
+                className="text-slate-400 hover:text-blue-400 hover:bg-blue-400/10 shrink-0"
               >
                 <ImageIcon size={20} />
               </Button>
@@ -436,7 +436,7 @@ export default function ChatPage() {
               variant="ghost" 
               size="icon" 
               onClick={handleVoiceRecord}
-              className={`transition-all ${isRecording ? "text-red-500 bg-red-500/10 animate-pulse" : "text-slate-400 hover:text-purple-400 hover:bg-purple-400/10"}`}
+              className={`transition-all shrink-0 ${isRecording ? "text-red-500 bg-red-500/10 animate-pulse" : "text-slate-400 hover:text-purple-400 hover:bg-purple-400/10"}`}
             >
               <Mic size={20} />
             </Button>
@@ -447,13 +447,13 @@ export default function ChatPage() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               disabled={isRecording}
-              className="border-none bg-transparent focus-visible:ring-0 text-slate-100"
+              className="border-none bg-transparent focus-visible:ring-0 text-slate-100 flex-1"
             />
             <Button 
               onClick={() => handleSend()} 
               disabled={(!input.trim() && !selectedImage) || isTyping || isRecording} 
               size="icon" 
-              className="bg-blue-600 hover:bg-blue-500 rounded-xl shadow-lg shadow-blue-900/20"
+              className="bg-blue-600 hover:bg-blue-500 rounded-xl shadow-lg shadow-blue-900/20 shrink-0"
             >
               <Send size={18} />
             </Button>
