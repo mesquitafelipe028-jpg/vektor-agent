@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Vektor Agent</title>
+    <meta name="description" content="Vektor é um sistema financeiro inteligente para autônomos e MEIs organizarem receitas, despesas e impostos de forma simples.">
+    <meta name="author" content="Vektor" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1E3A8A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Vektor" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.svg" />
+
+    <!-- Supabase preconnect -->
+    <link rel="preconnect" href="https://rpgczlwqquxvxsvfflyh.supabase.co" />
+
+    <!-- Non-blocking font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
+
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1453c218-f186-49dc-96ac-411d349d467c/id-preview-00695445--3b983fc9-1e1e-40eb-b52a-22b1ed825c6d.lovable.app-1772771040113.png">
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1453c218-f186-49dc-96ac-411d349d467c/id-preview-00695445--3b983fc9-1e1e-40eb-b52a-22b1ed825c6d.lovable.app-1772771040113.png">
+    <meta property="og:title" content="Vektor - Clareza Financeira para Autônomos e MEI">
+  <meta name="twitter:title" content="Vektor - Clareza Financeira para Autônomos e MEI">
+  <meta property="og:description" content="Vektor é um sistema financeiro inteligente para autônomos e MEIs organizarem receitas, despesas e impostos de forma simples.">
+  <meta name="twitter:description" content="Vektor é um sistema financeiro inteligente para autônomos e MEIs organizarem receitas, despesas e impostos de forma simples.">
+  <link rel="icon" type="image/svg+xml" href="/pwa-192x192.svg">
+</head>
+
+  <body>
+    <div id="root">
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f0f2f8;font-family:system-ui,-apple-system,sans-serif">
+        <div style="text-align:center">
+          <svg width="48" height="48" viewBox="0 0 32 32" fill="none" style="margin:0 auto">
+            <rect width="32" height="32" rx="8" fill="#1E3A8A"/>
+            <path d="M8 10L16 24L24 10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="24" cy="10" r="2.5" fill="#10B981"/>
+          </svg>
+          <p style="color:#1E3A8A;font-size:14px;margin-top:12px;font-weight:500">Carregando...</p>
+          <div style="width:120px;height:3px;background:#e5e7eb;border-radius:4px;margin:10px auto 0;overflow:hidden">
+            <div style="width:40%;height:100%;background:#10B981;border-radius:4px;animation:splash-bar 1.2s ease-in-out infinite"></div>
+          </div>
+        </div>
+      </div>
+      <style>@keyframes splash-bar{0%{transform:translateX(-100%)}50%{transform:translateX(150%)}100%{transform:translateX(-100%)}}</style>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
