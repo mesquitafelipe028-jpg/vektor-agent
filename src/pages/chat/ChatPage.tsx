@@ -10,7 +10,10 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { agentService } from "@/services/agentService";
 import { actionRouter } from "@/services/actionRouter";
-import { useDynamicFavicon } from "@/hooks/useDynamicFavicon";
+import { 
+  PieChart, Pie, Cell, ResponsiveContainer, 
+  BarChart, Bar, XAxis, YAxis, Tooltip, Legend 
+} from "recharts";
 
 interface Message {
   id: string;
@@ -21,6 +24,66 @@ interface Message {
   image_url?: string;
   intent?: string;
 }
+
+const COLORS = ['#3B82F6', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B', '#6366F1'];
+
+const MessageChart = ({ data, type, title }: { data: any[], type: string, title?: string }) => {
+  return (
+    <Card className="p-4 bg-slate-900/40 border-slate-800 backdrop-blur-xl mt-2 w-full max-w-sm overflow-hidden border border-slate-700/50 shadow-2xl">
+      {title && <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-tighter">{title}</h3>}
+      <div className="h-48 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          {type === 'pie' ? (
+            <PieChart>
+              <Pie
+                data={data}
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="value"
+                animationBegin={0}
+                animationDuration={1500}
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip 
+                contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', fontSize: '10px' }}
+                itemStyle={{ color: '#fff' }}
+              />
+            </PieChart>
+          ) : (
+            <BarChart data={data}>
+              <XAxis dataKey="label" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+              <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} hide />
+              <Tooltip 
+                cursor={{ fill: 'transparent' }}
+                contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', fontSize: '10px' }}
+                itemStyle={{ color: '#fff' }}
+              />
+              <Bar 
+                dataKey="value" 
+                fill="#3B82F6" 
+                radius={[4, 4, 0, 0]} 
+                animationDuration={1500}
+              />
+            </BarChart>
+          )}
+        </ResponsiveContainer>
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        {data.slice(0, 4).map((item, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+            <span className="text-[10px] text-slate-400 truncate">{item.label}</span>
+            <span className="text-[10px] text-slate-200 font-bold ml-auto">R$ {item.value}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+};
 
 export default function ChatPage() {
   useDynamicFavicon('agent');
@@ -184,6 +247,14 @@ export default function ChatPage() {
                     )}
                     {msg.content}
                   </div>
+
+                  {msg.metadata?.visual_data && (
+                    <MessageChart 
+                      type={msg.metadata.visual_data.type} 
+                      data={msg.metadata.visual_data.data} 
+                      title={msg.metadata.visual_data.title} 
+                    />
+                  )}
                   
                   {msg.intent === "add_transaction" && !msg.metadata?.confirmed && (
                     <Card className="p-4 bg-slate-800/60 border-slate-700/50 backdrop-blur-xl mt-2 overflow-hidden relative group">
