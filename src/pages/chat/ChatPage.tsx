@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { agentService } from "@/services/agentService";
 import { actionRouter } from "@/services/actionRouter";
+import { useDynamicFavicon } from "@/hooks/useDynamicFavicon";
 import { 
   PieChart, Pie, Cell, ResponsiveContainer, 
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend 
