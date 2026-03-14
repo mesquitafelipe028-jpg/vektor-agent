@@ -24,7 +24,7 @@ interface Message {
 
 export default function ChatPage() {
   useDynamicFavicon('agent');
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
